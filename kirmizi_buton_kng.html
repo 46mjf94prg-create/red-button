@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Red Button</title>
+    <style>
+        body { display: flex; flex-direction: column; align-items: center; }
+        #canvas { border: 1px solid black; }
+    </style>
+</head>
+<body>
+    <h1>Red Button KNG</h1>
+    <button id="red-button">Press me!</button>
+    <canvas id="canvas" width="600" height="400"></canvas>
+    <div id="slideshow">
+        <img id="slide" src="image1.jpg" alt="Slideshow Image" style="width:600px;height:400px;">
+    </div>
+    <script>
+        // Canvas Animation
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let animationRunning = false;
+
+        document.getElementById('red-button').addEventListener('click', function() {
+            if (!animationRunning) {
+                explosionEffect();
+            }
+            animationRunning = true;
+        });
+
+        function explosionEffect() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Logic for explosion effect
+            ctx.fillStyle = 'red';
+            ctx.beginPath();
+            ctx.arc(300, 200, 50, 0, 2 * Math.PI);
+            ctx.fill();
+            setTimeout(() => { animationRunning = false; }, 1000);
+        }
+
+        // Photo Slideshow
+        const images = ['image1.jpg', 'image2.jpg', 'image3.jpg'];
+        let currentImageIndex = 0;
+
+        function changeImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length;
+            document.getElementById('slide').src = images[currentImageIndex];
+        }
+
+        setInterval(changeImage, 3000); // Change image every 3 seconds
+    </script>
+</body>
+</html>
