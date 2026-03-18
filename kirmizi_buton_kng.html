@@ -1,54 +1,88 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Red Button</title>
+    <title>Kırmızı Buton</title>
     <style>
-        body { display: flex; flex-direction: column; align-items: center; }
-        #canvas { border: 1px solid black; }
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: black;
+            color: lime;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+        #canvas {
+            display: block;
+            margin: auto;
+        }
+        .glitch {
+            position: absolute;
+            color: white;
+            text-shadow: 2px 0 red, -2px 0 blue;
+            animation: glitch 1s infinite;
+        }
+        @keyframes glitch {
+            0% { clip-path: inset(0); }
+            33% { clip-path: inset(10%); }
+            66% { clip-path: inset(0); }
+            100% { clip-path: inset(15%); }
+        }
+        .crt {
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.7),
+                rgba(0, 0, 0, 0.7) 9%,
+                rgba(255, 255, 255, 0.1) 9%,
+                rgba(255, 255, 255, 0.1) 10%
+            );
+            display: block;
+            height: 100%;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body>
-    <h1>Red Button KNG</h1>
-    <button id="red-button">Press me!</button>
-    <canvas id="canvas" width="600" height="400"></canvas>
-    <div id="slideshow">
-        <img id="slide" src="image1.jpg" alt="Slideshow Image" style="width:600px;height:400px;">
-    </div>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div id="message" class="glitch">Basılacak Kırmızı Buton!</div>
+    <div class="crt"></div>
+
     <script>
-        // Canvas Animation
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
-        let animationRunning = false;
+        let plane; // Image of the plane
 
-        document.getElementById('red-button').addEventListener('click', function() {
-            if (!animationRunning) {
-                explosionEffect();
-            }
-            animationRunning = true;
-        });
+        // Load the sound effects
+        const beep = new Audio('beep.mp3');
+        const explosion = new Audio('explosion.mp3');
+        const happyBirthday = new Audio('happy_birthday.mp3');
 
-        function explosionEffect() {
+        function loadImages() {
+            plane = new Image();
+            plane.src = 'plane.png';
+            plane.onload = function() {
+                draw();
+            };
+        }
+
+        function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            // Logic for explosion effect
-            ctx.fillStyle = 'red';
-            ctx.beginPath();
-            ctx.arc(300, 200, 50, 0, 2 * Math.PI);
-            ctx.fill();
-            setTimeout(() => { animationRunning = false; }, 1000);
+            // Add code to draw the plane and animate flying into towers
+            ctx.drawImage(plane, 50, canvas.height / 2);
+            // Add explosion and sound effect when plane hits tower
+            setTimeout(() => {
+                explosion.play();
+                ctx.fillStyle = 'red';
+                ctx.fillRect(50, canvas.height / 2, 50, 50);
+            }, 3000); // Simulate hit after 3 seconds
         }
 
-        // Photo Slideshow
-        const images = ['image1.jpg', 'image2.jpg', 'image3.jpg'];
-        let currentImageIndex = 0;
-
-        function changeImage() {
-            currentImageIndex = (currentImageIndex + 1) % images.length;
-            document.getElementById('slide').src = images[currentImageIndex];
-        }
-
-        setInterval(changeImage, 3000); // Change image every 3 seconds
+        window.onload = () => {
+            loadImages();
+            setTimeout(() => { beep.play(); }, 500);
+            setTimeout(() => { happyBirthday.play(); }, 2000);
+        };
     </script>
 </body>
 </html>
